@@ -7,11 +7,17 @@ const Gameboard = (() => {
 })();
 
 const DisplayController = (() => {
+  const getCell = (value, index) => {
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    cell.id = index;
+    cell.innerHTML = value;
+    return cell;
+  };
+
   const render = (gameboard) => {
-    gameboard.forEach((value) => {
-      const cell = document.createElement('div');
-      cell.classList.add('cell');
-      cell.innerHTML = value;
+    gameboard.forEach((value, index) => {
+      const cell = getCell(value, index);
       document.querySelector('.gameboard').appendChild(cell);
     });
   };
