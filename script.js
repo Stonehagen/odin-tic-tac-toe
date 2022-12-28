@@ -1,9 +1,13 @@
 const Gameboard = (() => {
   const gameboard = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
 
+  const setGameboard = (index, sign) => {
+    gameboard[index] = sign;
+  };
+
   const getGameboard = () => gameboard;
 
-  return { getGameboard };
+  return { getGameboard, setGameboard };
 })();
 
 const DisplayController = (() => {
