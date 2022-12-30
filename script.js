@@ -1,35 +1,22 @@
-const events = {
-  events: {},
-  on: (eventName, fn) => {
-    this.events[eventName] = this.events[eventName] || [];
-    this.events[eventName].push(fn);
-  },
-  off: (eventName, fn) => {
-    if (this.events[eventName]) {
-      for (let i = 0; i < this.events[eventName].length; i += 1) {
-        if (this.events[eventName][i] === fn) {
-          this.events[eventName].splice(i, 1);
-          break;
-        }
-      }
-    }
-  },
-  emit: (eventName, data) => {
-    if (this.events[eventName]) {
-      this.events[eventName].forEach((fn) => {
-        fn(data);
-      });
-    }
-  },
-};
-
-const Gameboard = (() => {
+/* eslint-disable func-names */
+/* eslint-disable wrap-iife */
+const Gameboard = (function () {
   const gameboard = Array(9).fill(' ');
+
+  const createPlayer = (sign, name = 'player') => ({ sign, name });
+
+  const playerX = createPlayer('X');
+  const playerO = createPlayer('O');
+
+  let xTurn = true;
 
   const getGameboard = () => gameboard;
 
-  const setGameboard = (index, sign) => {
-    gameboard[index] = sign;
+  const setGameboard = (index) => {
+    if (gameboard[index] !== ' ') return;
+    gameboard[index] = xTurn ? playerX.sign : playerO.sign;
+    DisplayController.render(gameboard);
+    xTurn = !xTurn;
   };
 
   const createCell = (value, index) => {
@@ -40,15 +27,10 @@ const Gameboard = (() => {
     return cell;
   };
 
-  const setCell = (index, sign) => {
-    document.getElementById(index).innerHTML = sign;
-  };
-
   const addClickEvent = (cells, sign = 'T') => {
     cells.forEach((cell) => {
       cell.addEventListener('click', () => {
-        setGameboard(cell.id, sign);
-        setCell(cell.id, sign);
+        setGameboard(cell.id);
       });
     });
   };
@@ -58,12 +40,12 @@ const Gameboard = (() => {
     setGameboard,
     createCell,
     addClickEvent,
-    setCell,
   };
 })();
 
-const DisplayController = (() => {
+const DisplayController = (function () {
   const render = (gameboard) => {
+    document.querySelector('.gameboard').innerHTML = '';
     gameboard.forEach((value, index) => {
       const cell = Gameboard.createCell(value, index);
       document.querySelector('.gameboard').appendChild(cell);
@@ -73,7 +55,5 @@ const DisplayController = (() => {
 
   return { render };
 })();
-
-const createPlayer = (sign, name = 'player') => ({ sign, name });
 
 DisplayController.render(Gameboard.getGameboard());
