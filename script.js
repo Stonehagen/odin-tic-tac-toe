@@ -21,9 +21,20 @@ const Gameboard = (function () {
 
   let xTurn = true;
 
+  const checkTie = () => {
+    let tie = true;
+    gameboard.forEach((cell) => {
+      if (cell === ' ') {
+        tie = false;
+      }
+    });
+    return tie;
+  };
+
   const getWinner = () => winner;
 
   const checkWinner = () => {
+    let win = false;
     winPattern.forEach((pattern) => {
       if (gameboard[pattern[0]] !== ' ') {
         if (
@@ -31,11 +42,18 @@ const Gameboard = (function () {
           gameboard[pattern[0]] === gameboard[pattern[2]]
         ) {
           winner = gameboard[pattern[0]];
-          return true;
+          win = true;
         }
       }
     });
-    return false;
+    if (win) {
+      return true;
+    }
+    if (checkTie()) {
+      winner = 'Tie';
+      win = true;
+    }
+    return win;
   };
 
   const getWinningText = () => {
