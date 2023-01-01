@@ -10,10 +10,22 @@
 </head>
 <body>
     <div class="container">
-        <div class="info">
+        <div class="controller">
+            <form action="POST">
+                <div class="wrapper">
+                    <label for="playerX">Player X</label>
+                    <input type="text" name="playerX" id="playerX">
+                </div>
+                <div class="wrapper">
+                    <label for="playerY">Player Y</label>
+                    <input type="text" name="playerY" id="playerY">
+                </div>
+                <div class="wrapper"><button type="submit">Start Game</button></div>
+            </form>
         </div>
         <div class="gameboard">
         </div>
+        <div class="info"></div>
     </div>
 </body>
 </html>
