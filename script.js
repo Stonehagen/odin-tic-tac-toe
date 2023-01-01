@@ -14,6 +14,8 @@ const Gameboard = (function GetGameboard() {
   ];
   let winner = ' ';
 
+  let aiGame = false;
+
   const createPlayer = (sign, name = 'player') => ({ sign, name });
 
   const playerX = createPlayer('X');
@@ -25,6 +27,12 @@ const Gameboard = (function GetGameboard() {
     }
     if (document.querySelector('#playerO').value === '') {
       document.querySelector('#playerO').value = 'Player O';
+    }
+    if (aiGame) {
+      document.querySelector('#playerO').value = 'Computer';
+      playerO.sign = 'C';
+    } else {
+      playerO.sign = 'O';
     }
     playerX.name = document.querySelector('#playerX').value;
     playerO.name = document.querySelector('#playerO').value;
@@ -72,10 +80,13 @@ const Gameboard = (function GetGameboard() {
 
   const getWinningText = () => {
     checkWinner();
-    if (winner !== ' ') {
-      return `Winner: ${winner}`;
+    if (winner === ' ') {
+      return ' ';
     }
-    return ' ';
+    if (checkTie()) {
+      return winner;
+    }
+    return `Winner: ${winner}`;
   };
 
   const getGameboard = () => gameboard;
@@ -84,6 +95,19 @@ const Gameboard = (function GetGameboard() {
     if (gameboard[index] !== ' ') return;
     gameboard[index] = xTurn ? playerX.sign : playerO.sign;
     xTurn = !xTurn;
+    if (aiGame) {
+      if (checkWinner()) {
+        DisplayController.render(gameboard);
+        return;
+      }
+      while (!xTurn) {
+        let randomIndex = Math.floor(Math.random() * 10);
+        if (gameboard[randomIndex] === ' ') {
+          gameboard[randomIndex] = playerO.sign;
+          xTurn = !xTurn;
+        }
+      }
+    }
     checkWinner();
     DisplayController.render(gameboard);
   };
@@ -110,10 +134,11 @@ const Gameboard = (function GetGameboard() {
     });
   };
 
-  const addClickEventStart = (button) => {
+  const addClickEventStart = (button, checkbox) => {
     button.addEventListener('click', (e) => {
       e.preventDefault();
       restart();
+      aiGame = checkbox.checked;
       setPlayerNames();
       DisplayController.render(gameboard);
     });
@@ -139,7 +164,10 @@ const DisplayController = (function GetDisplayController() {
       document.querySelector('.gameboard').appendChild(cell);
     });
     Gameboard.addClickEventCell(document.querySelectorAll('.cell'));
-    Gameboard.addClickEventStart(document.querySelector('#start-btn'));
+    Gameboard.addClickEventStart(
+      document.querySelector('#start-btn'),
+      document.querySelector('#ai-game'),
+    );
     document.querySelector('.info').innerHTML = Gameboard.getWinningText();
     if (Gameboard.getWinner() !== ' ') {
       Gameboard.restart();
@@ -152,7 +180,10 @@ const DisplayController = (function GetDisplayController() {
       const cell = Gameboard.createCell(value, index);
       document.querySelector('.gameboard').appendChild(cell);
     });
-    Gameboard.addClickEventStart(document.querySelector('#start-btn'));
+    Gameboard.addClickEventStart(
+      document.querySelector('#start-btn'),
+      document.querySelector('#ai-game'),
+    );
   };
 
   return {

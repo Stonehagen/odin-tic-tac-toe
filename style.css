@@ -38,6 +38,12 @@ form {
   grid-template-rows: 1fr 1fr;
   background-color: rgb(138, 207, 210);
   padding: 5px;
+  gap: 5px;
+}
+
+.check-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 input {
@@ -48,14 +54,10 @@ input {
 }
 
 button {
-  grid-row-start: 1;
-  grid-row-end: 3;
   color: rgb(138, 207, 210);
   background-color: white;
-  height: 100%;
-  width: 100%;
   border: none;
-  font-size: 30px;
+  font-size: 10px;
 }
 
 button:hover {
