@@ -88,7 +88,7 @@ const Gameboard = (function () {
     return cell;
   };
 
-  const addClickEvent = (cells) => {
+  const addClickEventCell = (cells) => {
     cells.forEach((cell) => {
       cell.addEventListener('click', () => {
         setGameboard(cell.id);
@@ -96,11 +96,20 @@ const Gameboard = (function () {
     });
   };
 
+  const addClickEventStart = (button) => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      restart();
+      DisplayController.render(gameboard);
+    });
+  };
+
   return {
     getGameboard,
     setGameboard,
     createCell,
-    addClickEvent,
+    addClickEventCell,
+    addClickEventStart,
     getWinner,
     getWinningText,
     restart,
@@ -114,7 +123,8 @@ const DisplayController = (function () {
       const cell = Gameboard.createCell(value, index);
       document.querySelector('.gameboard').appendChild(cell);
     });
-    Gameboard.addClickEvent(document.querySelectorAll('.cell'));
+    Gameboard.addClickEventCell(document.querySelectorAll('.cell'));
+    Gameboard.addClickEventStart(document.querySelector('#start-btn'));
     document.querySelector('.info').innerHTML = Gameboard.getWinningText();
     if (Gameboard.getWinner() !== ' ') {
       Gameboard.restart();

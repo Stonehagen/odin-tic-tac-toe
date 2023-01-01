@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
     <title>Tic Tac Toe</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="controller">
-            <form action="POST">
-                <div class="wrapper">
-                    <label for="playerX">Player X</label>
-                    <input type="text" name="playerX" id="playerX">
-                </div>
-                <div class="wrapper">
-                    <label for="playerY">Player Y</label>
-                    <input type="text" name="playerY" id="playerY">
-                </div>
-                <div class="wrapper"><button type="submit">Start Game</button></div>
-            </form>
+      <div class="controller">
+        <form action="POST">
+          <div class="wrapper">
+            <label for="playerX">Player X</label>
+            <input type="text" name="playerX" id="playerX" />
+          </div>
+          <div class="wrapper">
+            <label for="playerY">Player Y</label>
+            <input type="text" name="playerY" id="playerY" />
+          </div>
+          <div class="wrapper">
+            <button type="submit" id="start-btn">Start Game</button>
         </div>
-        <div class="gameboard">
-        </div>
-        <div class="info"></div>
+        </form>
+      </div>
+      <div class="gameboard"></div>
+      <div class="info"></div>
     </div>
-</body>
+  </body>
 </html>

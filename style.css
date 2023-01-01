@@ -36,21 +36,21 @@ form {
 .wrapper {
   display: grid;
   grid-template-rows: 1fr 1fr;
-  background-color: cadetblue;
+  background-color: rgb(138, 207, 210);
   padding: 5px;
 }
 
 input {
   font-size: 20px;
   border: none;
-  color: cadetblue;
+  color: rgb(138, 207, 210);
   width: 98%;
 }
 
 button {
   grid-row-start: 1;
   grid-row-end: 3;
-  color: cadetblue;
+  color: rgb(138, 207, 210);
   background-color: white;
   height: 100%;
   width: 100%;
@@ -99,7 +99,7 @@ button:hover {
   grid-row-start: 2;
   font-size: 35px;
   color: white;
-  background-color: cadetblue;
+  background-color: rgb(138, 207, 210);
   width: 100%;
   height: 100%;
   justify-items: center;
