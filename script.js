@@ -1,6 +1,6 @@
-/* eslint-disable func-names */
+/* eslint-disable no-use-before-define */
 /* eslint-disable wrap-iife */
-const Gameboard = (function () {
+const Gameboard = (function GetGameboard() {
   let gameboard = Array(9).fill(' ');
   const winPattern = [
     [0, 1, 2],
@@ -18,6 +18,17 @@ const Gameboard = (function () {
 
   const playerX = createPlayer('X');
   const playerO = createPlayer('O');
+
+  const setPlayerNames = () => {
+    if (document.querySelector('#playerX').value === '') {
+      document.querySelector('#playerX').value = 'Player X';
+    }
+    if (document.querySelector('#playerO').value === '') {
+      document.querySelector('#playerO').value = 'Player O';
+    }
+    playerX.name = document.querySelector('#playerX').value;
+    playerO.name = document.querySelector('#playerO').value;
+  };
 
   let xTurn = true;
 
@@ -41,7 +52,10 @@ const Gameboard = (function () {
           gameboard[pattern[0]] === gameboard[pattern[1]] &&
           gameboard[pattern[0]] === gameboard[pattern[2]]
         ) {
-          winner = gameboard[pattern[0]];
+          winner =
+            playerX.sign === gameboard[pattern[0]]
+              ? playerX.name
+              : playerO.name;
           win = true;
         }
       }
@@ -100,6 +114,7 @@ const Gameboard = (function () {
     button.addEventListener('click', (e) => {
       e.preventDefault();
       restart();
+      setPlayerNames();
       DisplayController.render(gameboard);
     });
   };
@@ -116,7 +131,7 @@ const Gameboard = (function () {
   };
 })();
 
-const DisplayController = (function () {
+const DisplayController = (function GetDisplayController() {
   const render = (gameboard) => {
     document.querySelector('.gameboard').innerHTML = '';
     gameboard.forEach((value, index) => {
@@ -131,7 +146,19 @@ const DisplayController = (function () {
     }
   };
 
-  return { render };
+  const renderStart = (gameboard) => {
+    document.querySelector('.gameboard').innerHTML = '';
+    gameboard.forEach((value, index) => {
+      const cell = Gameboard.createCell(value, index);
+      document.querySelector('.gameboard').appendChild(cell);
+    });
+    Gameboard.addClickEventStart(document.querySelector('#start-btn'));
+  };
+
+  return {
+    render,
+    renderStart,
+  };
 })();
 
-DisplayController.render(Gameboard.getGameboard());
+DisplayController.renderStart(Gameboard.getGameboard());
