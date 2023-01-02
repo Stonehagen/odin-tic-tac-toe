@@ -47,27 +47,6 @@ const Gameboard = (function GetGameboard() {
 
   const getGameboard = () => gameboard;
 
-  const setGameboard = (index) => {
-    if (gameboard[index] !== ' ') return;
-    gameboard[index] = xTurn ? playerX.sign : playerO.sign;
-    xTurn = !xTurn;
-    if (aiGame) {
-      if (checkGameEnd(true)) {
-        DisplayController.render(gameboard);
-        return;
-      }
-      while (!xTurn) {
-        const randomIndex = Math.floor(Math.random() * 10);
-        if (gameboard[randomIndex] === ' ') {
-          gameboard[randomIndex] = playerO.sign;
-          xTurn = !xTurn;
-        }
-      }
-    }
-    checkGameEnd(true);
-    DisplayController.render(gameboard);
-  };
-
   const restart = () => {
     gameboard = Array(9).fill(' ');
     winner = ' ';
@@ -128,15 +107,71 @@ const Gameboard = (function GetGameboard() {
     return '';
   };
 
+  const pseudoMove = (aiGameboard, index, sign) => {
+    const copyGameboard = [...aiGameboard];
+    copyGameboard[index] = sign;
+    return copyGameboard;
+  };
+
+  const recAiMove = (redGameboard, index, ownMove, depth) => {
+    const recDepth = depth;
+    const sign = ownMove ? 'O' : 'X';
+    if (redGameboard[index] !== ' ') {
+      return -Infinity;
+    }
+    if (checkWin(pseudoMove(redGameboard, index, sign)) === sign) {
+      if (recDepth === 0) {
+        return 1000;
+        // eslint-disable-next-line no-else-return
+      } else if (recDepth === 1) {
+        return -1000;
+      }
+      return ownMove ? 10 - recDepth : recDepth - 10;
+    }
+    // eslint-disable-next-line arrow-body-style
+    const nextScores = gameboard.map((move, nextIndex) => {
+      return recAiMove(
+        pseudoMove(redGameboard, index, sign),
+        nextIndex,
+        !ownMove,
+        depth + 1,
+      );
+    });
+    return nextScores.reduce((ac, cv) => {
+      if (cv === -Infinity) {
+        return ac;
+      }
+      return ac + cv;
+    }, 0);
+  };
+
   const getAiMove = () => {
-    //
+    // eslint-disable-next-line arrow-body-style
+    const scores = gameboard.map((move, index) => {
+      return recAiMove(gameboard, index, true, 0);
+    });
+
+    console.log(scores);
+
+    return scores.indexOf(Math.max(...scores));
+  };
+
+  const makeMove = (index) => {
+    if (gameboard[index] !== ' ') return;
+    gameboard[index] = xTurn ? playerX.sign : playerO.sign;
+    xTurn = !xTurn;
+    if (aiGame && !checkGameEnd(true)) {
+      gameboard[getAiMove()] = playerO.sign;
+      xTurn = true;
+    }
+    checkGameEnd(true);
+    DisplayController.render(gameboard);
   };
 
   const addClickEventCell = (cells) => {
     cells.forEach((cell) => {
       cell.addEventListener('click', () => {
-        setGameboard(cell.id);
-        getAiMove();
+        makeMove(cell.id);
       });
     });
   };
