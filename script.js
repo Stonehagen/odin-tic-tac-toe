@@ -2,7 +2,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable wrap-iife */
 const Gameboard = (function GetGameboard() {
-  let gameboard = Array(9).fill(' ');
   const winPattern = [
     [0, 1, 2],
     [3, 4, 5],
@@ -13,9 +12,11 @@ const Gameboard = (function GetGameboard() {
     [0, 4, 8],
     [2, 4, 6],
   ];
-  let winner = ' ';
 
+  let gameboard = Array(9).fill(' ');
+  let winner = ' ';
   let aiGame = false;
+  let xTurn = true;
 
   const createPlayer = (sign, name = 'player') => ({ sign, name });
 
@@ -23,28 +24,26 @@ const Gameboard = (function GetGameboard() {
   const playerO = createPlayer('O');
 
   const setPlayerNames = () => {
-    if (document.querySelector('#playerX').value === '') {
-      document.querySelector('#playerX').value = 'Player X';
+    const playerXInput = document.querySelector('#playerX');
+    const playerOInput = document.querySelector('#playerO');
+
+    if (playerXInput.value === '') {
+      playerXInput.value = 'Player X';
     }
-    if (document.querySelector('#playerO').value === '') {
-      document.querySelector('#playerO').value = 'Player O';
+    if (playerOInput.value === '') {
+      playerOInput.value = 'Player O';
     }
     if (aiGame) {
-      document.querySelector('#playerO').value = 'Computer';
-      playerO.sign = 'C';
-    } else {
-      playerO.sign = 'O';
+      playerOInput.value = 'Computer';
     }
-    playerX.name = document.querySelector('#playerX').value;
-    playerO.name = document.querySelector('#playerO').value;
+    playerX.name = playerXInput.value;
+    playerO.name = playerOInput.value;
   };
 
   // eslint-disable-next-line arrow-body-style
   const getPlayerName = (sign) => {
     return sign === playerX.sign ? playerX.name : playerO.name;
   };
-
-  let xTurn = true;
 
   const getGameboard = () => gameboard;
 
@@ -75,16 +74,6 @@ const Gameboard = (function GetGameboard() {
     xTurn = true;
   };
 
-  const checkTie = () => {
-    let tie = true;
-    gameboard.forEach((cell) => {
-      if (cell === ' ') {
-        tie = false;
-      }
-    });
-    return tie;
-  };
-
   const getWinner = () => winner;
 
   const checkWin = (gameboardArray = gameboard) => {
@@ -100,6 +89,16 @@ const Gameboard = (function GetGameboard() {
       }
     });
     return winSign;
+  };
+
+  const checkTie = () => {
+    let tie = true;
+    gameboard.forEach((cell) => {
+      if (cell === ' ') {
+        tie = false;
+      }
+    });
+    return tie;
   };
 
   const checkGameEnd = (set) => {
@@ -133,14 +132,6 @@ const Gameboard = (function GetGameboard() {
     //
   };
 
-  const createCell = (value, index) => {
-    const cell = document.createElement('div');
-    cell.classList.add('cell');
-    cell.id = index;
-    cell.innerHTML = value;
-    return cell;
-  };
-
   const addClickEventCell = (cells) => {
     cells.forEach((cell) => {
       cell.addEventListener('click', () => {
@@ -162,21 +153,38 @@ const Gameboard = (function GetGameboard() {
 
   return {
     getGameboard,
-    setGameboard,
-    createCell,
-    addClickEventCell,
-    addClickEventStart,
     getWinner,
     getWinningText,
-    restart,
+    addClickEventCell,
+    addClickEventStart,
   };
 })();
 
 const DisplayController = (function GetDisplayController() {
+  const createCell = (value, index) => {
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    cell.id = index;
+    cell.innerHTML = value;
+    return cell;
+  };
+
+  const renderStart = (gameboard) => {
+    document.querySelector('.gameboard').innerHTML = '';
+    gameboard.forEach((value, index) => {
+      const cell = createCell(value, index);
+      document.querySelector('.gameboard').appendChild(cell);
+    });
+    Gameboard.addClickEventStart(
+      document.querySelector('#start-btn'),
+      document.querySelector('#ai-game'),
+    );
+  };
+
   const render = (gameboard) => {
     document.querySelector('.gameboard').innerHTML = '';
     gameboard.forEach((value, index) => {
-      const cell = Gameboard.createCell(value, index);
+      const cell = createCell(value, index);
       document.querySelector('.gameboard').appendChild(cell);
     });
     Gameboard.addClickEventCell(document.querySelectorAll('.cell'));
@@ -186,25 +194,13 @@ const DisplayController = (function GetDisplayController() {
     );
     document.querySelector('.info').innerHTML = Gameboard.getWinningText();
     if (Gameboard.getWinner() !== ' ') {
-      Gameboard.restart();
+      renderStart(gameboard);
     }
   };
 
-  const renderStart = (gameboard) => {
-    document.querySelector('.gameboard').innerHTML = '';
-    gameboard.forEach((value, index) => {
-      const cell = Gameboard.createCell(value, index);
-      document.querySelector('.gameboard').appendChild(cell);
-    });
-    Gameboard.addClickEventStart(
-      document.querySelector('#start-btn'),
-      document.querySelector('#ai-game'),
-    );
-  };
-
   return {
-    render,
     renderStart,
+    render,
   };
 })();
 
