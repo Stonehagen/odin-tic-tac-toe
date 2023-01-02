@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable no-use-before-define */
 /* eslint-disable wrap-iife */
 const Gameboard = (function GetGameboard() {
@@ -38,6 +39,11 @@ const Gameboard = (function GetGameboard() {
     playerO.name = document.querySelector('#playerO').value;
   };
 
+  // eslint-disable-next-line arrow-body-style
+  const getPlayerName = (sign) => {
+    return sign === playerX.sign ? playerX.name : playerO.name;
+  };
+
   let xTurn = true;
 
   const checkTie = () => {
@@ -52,41 +58,50 @@ const Gameboard = (function GetGameboard() {
 
   const getWinner = () => winner;
 
-  const checkWinner = () => {
-    let win = false;
+  const checkWin = (gameboardArray = gameboard) => {
+    let winSign;
     winPattern.forEach((pattern) => {
-      if (gameboard[pattern[0]] !== ' ') {
+      if (gameboardArray[pattern[0]] !== ' ') {
         if (
-          gameboard[pattern[0]] === gameboard[pattern[1]] &&
-          gameboard[pattern[0]] === gameboard[pattern[2]]
+          gameboardArray[pattern[0]] === gameboardArray[pattern[1]] &&
+          gameboardArray[pattern[0]] === gameboardArray[pattern[2]]
         ) {
-          winner =
-            playerX.sign === gameboard[pattern[0]]
-              ? playerX.name
-              : playerO.name;
-          win = true;
+          winSign = gameboardArray[pattern[0]];
         }
       }
     });
-    if (win) {
+    return winSign;
+  };
+
+  const checkGameEnd = (set) => {
+    const winningSign = checkWin();
+    if (winningSign) {
+      if (set) {
+        winner = getPlayerName(winningSign);
+      }
       return true;
     }
     if (checkTie()) {
-      winner = 'Tie';
-      win = true;
+      if (set) {
+        winner = 'Tie';
+      }
+      return true;
     }
-    return win;
+    return false;
+  };
+
+  const getAiMove = () => {
+    //
   };
 
   const getWinningText = () => {
-    checkWinner();
-    if (winner === ' ') {
-      return ' ';
+    if (checkGameEnd(true)) {
+      if (winner === 'Tie') {
+        return winner;
+      }
+      return `${winner} Won`;
     }
-    if (checkTie()) {
-      return winner;
-    }
-    return `Winner: ${winner}`;
+    return '';
   };
 
   const getGameboard = () => gameboard;
@@ -96,19 +111,19 @@ const Gameboard = (function GetGameboard() {
     gameboard[index] = xTurn ? playerX.sign : playerO.sign;
     xTurn = !xTurn;
     if (aiGame) {
-      if (checkWinner()) {
+      if (checkGameEnd(true)) {
         DisplayController.render(gameboard);
         return;
       }
       while (!xTurn) {
-        let randomIndex = Math.floor(Math.random() * 10);
+        const randomIndex = Math.floor(Math.random() * 10);
         if (gameboard[randomIndex] === ' ') {
           gameboard[randomIndex] = playerO.sign;
           xTurn = !xTurn;
         }
       }
     }
-    checkWinner();
+    checkGameEnd(true);
     DisplayController.render(gameboard);
   };
 
@@ -130,6 +145,7 @@ const Gameboard = (function GetGameboard() {
     cells.forEach((cell) => {
       cell.addEventListener('click', () => {
         setGameboard(cell.id);
+        getAiMove();
       });
     });
   };
