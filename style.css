@@ -1,3 +1,8 @@
+:root {
+  --backgroundColor : rgb(65, 159, 241);
+  --borderColor : rgba(154, 250, 204, 0.647);
+}
+
 body {
   height: 100vh;
   display: grid;
@@ -5,20 +10,35 @@ body {
   align-items: center;
 }
 
+h1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  display: grid;
+  text-align: center;
+  font-size: 60px;
+  margin: 0;
+  color: var(--backgroundColor);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 3fr 1fr;
+  grid-template-rows: 1fr 3fr 1fr;
   align-items: center;
   justify-items: center;
   gap: 5px;
   width: 400px;
-  height: 300px;
+  height: 400px;
+  padding: 0 20px 20px 20px;
+  border: solid 20px var(--borderColor);
+  border-radius: 40px;
 }
 
 .controller {
   grid-column-start: 1;
-  grid-row-start: 1;
+  grid-row-start: 2;
   display: grid;
   width: 100%;
   height: 100%;
@@ -33,40 +53,53 @@ form {
   color: white;
 }
 
+label {
+  font-size: 25px;
+}
+
 .wrapper {
   display: grid;
   grid-template-rows: 1fr 1fr;
-  background-color: rgb(138, 207, 210);
-  padding: 5px;
+  background-color: var(--backgroundColor);
+  padding: 5px 10px;
   gap: 5px;
 }
 
 .check-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 5fr 1fr;
+}
+
+.wrapper:first-of-type {
+  border-radius: 10px 0 0 0;
 }
 
 input {
   font-size: 20px;
   border: none;
-  color: rgb(138, 207, 210);
+  color: var(--backgroundColor);
+
   width: 98%;
+  border-radius: 5px;
 }
 
 button {
-  color: rgb(138, 207, 210);
+  color: var(--backgroundColor);
   background-color: white;
   border: none;
-  font-size: 10px;
+  font-size: 18px;
+  border-radius: 5px;
 }
 
 button:hover {
     cursor: pointer;
-  }
+    background-color: rgb(47, 106, 223);
+    color: white;
+}
 
 .gameboard {
   grid-column-start: 2;
-  grid-row-start: 1;
+  grid-row-start: 2;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -80,7 +113,7 @@ button:hover {
 
 .cell {
   display: flex;
-  background-color: cadetblue;
+  background-color: var(--backgroundColor);
   color: white;
   width: 100%;
   height: 100%;
@@ -88,6 +121,10 @@ button:hover {
   align-items: center;
   font-size: 50px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.cell:nth-of-type(3) {
+  border-radius: 0 10px 0 0;
 }
 
 .cell:hover {
@@ -98,12 +135,13 @@ button:hover {
   display: grid;
   grid-column-start: 1;
   grid-column-end: 3;
-  grid-row-start: 2;
+  grid-row-start: 3;
   font-size: 35px;
   color: white;
-  background-color: rgb(138, 207, 210);
+  background-color: var(--backgroundColor);
   width: 100%;
   height: 100%;
   justify-items: center;
-  align-items: center;
+  align-items: center;  
+  border-radius: 0 0 10px 10px;
 }
