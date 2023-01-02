@@ -17,6 +17,7 @@ const Gameboard = (function GetGameboard() {
   let winner = ' ';
   let aiGame = false;
   let xTurn = true;
+  let startAi = false;
 
   const createPlayer = (sign, name = 'player') => ({ sign, name });
 
@@ -51,6 +52,10 @@ const Gameboard = (function GetGameboard() {
     gameboard = Array(9).fill(' ');
     winner = ' ';
     xTurn = true;
+    if (aiGame && startAi) {
+      gameboard[4] = playerO.sign;
+    }
+    startAi = !startAi;
   };
 
   const getWinner = () => winner;
@@ -201,7 +206,7 @@ const DisplayController = (function GetDisplayController() {
     return cell;
   };
 
-  const renderStart = (gameboard) => {
+  const initialRender = (gameboard) => {
     document.querySelector('.gameboard').innerHTML = '';
     gameboard.forEach((value, index) => {
       const cell = createCell(value, index);
@@ -211,6 +216,14 @@ const DisplayController = (function GetDisplayController() {
       document.querySelector('#start-btn'),
       document.querySelector('#ai-game'),
     );
+  };
+
+  const renderStart = (gameboard) => {
+    document.querySelector('.gameboard').innerHTML = '';
+    gameboard.forEach((value, index) => {
+      const cell = createCell(value, index);
+      document.querySelector('.gameboard').appendChild(cell);
+    });
   };
 
   const render = (gameboard) => {
@@ -220,10 +233,6 @@ const DisplayController = (function GetDisplayController() {
       document.querySelector('.gameboard').appendChild(cell);
     });
     Gameboard.addClickEventCell(document.querySelectorAll('.cell'));
-    Gameboard.addClickEventStart(
-      document.querySelector('#start-btn'),
-      document.querySelector('#ai-game'),
-    );
     document.querySelector('.info').innerHTML = Gameboard.getWinningText();
     if (Gameboard.getWinner() !== ' ') {
       renderStart(gameboard);
@@ -231,9 +240,10 @@ const DisplayController = (function GetDisplayController() {
   };
 
   return {
+    initialRender,
     renderStart,
     render,
   };
 })();
 
-DisplayController.renderStart(Gameboard.getGameboard());
+DisplayController.initialRender(Gameboard.getGameboard());
