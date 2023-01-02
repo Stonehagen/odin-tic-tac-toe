@@ -46,6 +46,35 @@ const Gameboard = (function GetGameboard() {
 
   let xTurn = true;
 
+  const getGameboard = () => gameboard;
+
+  const setGameboard = (index) => {
+    if (gameboard[index] !== ' ') return;
+    gameboard[index] = xTurn ? playerX.sign : playerO.sign;
+    xTurn = !xTurn;
+    if (aiGame) {
+      if (checkGameEnd(true)) {
+        DisplayController.render(gameboard);
+        return;
+      }
+      while (!xTurn) {
+        const randomIndex = Math.floor(Math.random() * 10);
+        if (gameboard[randomIndex] === ' ') {
+          gameboard[randomIndex] = playerO.sign;
+          xTurn = !xTurn;
+        }
+      }
+    }
+    checkGameEnd(true);
+    DisplayController.render(gameboard);
+  };
+
+  const restart = () => {
+    gameboard = Array(9).fill(' ');
+    winner = ' ';
+    xTurn = true;
+  };
+
   const checkTie = () => {
     let tie = true;
     gameboard.forEach((cell) => {
@@ -90,10 +119,6 @@ const Gameboard = (function GetGameboard() {
     return false;
   };
 
-  const getAiMove = () => {
-    //
-  };
-
   const getWinningText = () => {
     if (checkGameEnd(true)) {
       if (winner === 'Tie') {
@@ -104,33 +129,8 @@ const Gameboard = (function GetGameboard() {
     return '';
   };
 
-  const getGameboard = () => gameboard;
-
-  const setGameboard = (index) => {
-    if (gameboard[index] !== ' ') return;
-    gameboard[index] = xTurn ? playerX.sign : playerO.sign;
-    xTurn = !xTurn;
-    if (aiGame) {
-      if (checkGameEnd(true)) {
-        DisplayController.render(gameboard);
-        return;
-      }
-      while (!xTurn) {
-        const randomIndex = Math.floor(Math.random() * 10);
-        if (gameboard[randomIndex] === ' ') {
-          gameboard[randomIndex] = playerO.sign;
-          xTurn = !xTurn;
-        }
-      }
-    }
-    checkGameEnd(true);
-    DisplayController.render(gameboard);
-  };
-
-  const restart = () => {
-    gameboard = Array(9).fill(' ');
-    winner = ' ';
-    xTurn = true;
+  const getAiMove = () => {
+    //
   };
 
   const createCell = (value, index) => {
