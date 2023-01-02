@@ -150,9 +150,6 @@ const Gameboard = (function GetGameboard() {
     const scores = gameboard.map((move, index) => {
       return recAiMove(gameboard, index, true, 0);
     });
-
-    console.log(scores);
-
     return scores.indexOf(Math.max(...scores));
   };
 
